@@ -1,7 +1,9 @@
 package com.example.minesweeper;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 import android.content.Context;
@@ -17,13 +19,15 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
+
 public class CustomView extends View {
 
     private TextPaint mTextPaint;
     private Paint rectPaint;
+    ArrayList<Cell> cells = new ArrayList<>(100);
 
     Rect square;
-    int sideLength;
 
     public CustomView(Context context) {
         super(context);
@@ -42,45 +46,68 @@ public class CustomView extends View {
 
     private void init(AttributeSet attrs, int defStyle) {
         setBackgroundColor(Color.WHITE);
+        for (int i = 0; i < 100; i++)
+            cells.add(new Cell());
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        // TODO: consider storing these as member variables to reduce
-        // allocations per draw cycle.
         int paddingLeft = getPaddingLeft();
-        int paddingTop = getPaddingTop();
         int paddingRight = getPaddingRight();
-        int paddingBottom = getPaddingBottom();
 
         int contentWidth = getWidth() - paddingLeft - paddingRight;
-        int contentHeight = getHeight() - paddingTop - paddingBottom;
 
-        //Bounds of squares to be drawn.
-        int rectBounds = contentWidth/10;
+        int rectBounds = contentWidth / 10;
 
-        //Side length of the square.
-        int sideLength = rectBounds - 10 ;
+        int sideLength = rectBounds - 10;
 
-
-        //Paint instance for drawing the squares.
         rectPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         rectPaint.setColor(Color.BLACK);
 
-        //Create a rect which is actually a square.
-        square = new Rect(10,10, sideLength, sideLength);
+        square = new Rect(10, 10, sideLength, sideLength);
 
-        //Draw a row of squares.
-        for(int i = 0; i< 10; i++) {
-            for(int j = 0; j < 10; j++) {
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
                 canvas.save();
                 canvas.translate(j * rectBounds, i * rectBounds);
+                if (!cells.get(i * 10 + j).isCovered())
+                    rectPaint.setColor(Color.GRAY);
+                else {
+                    if (cells.get(i * 10 + j).isMined())
+                        rectPaint.setColor(Color.RED);
+                    else
+                        rectPaint.setColor(Color.BLACK);
+                }
                 canvas.drawRect(square, rectPaint);
                 canvas.restore();
             }
-
         }
+    }
+
+    public boolean onTouchEvent(MotionEvent event) {
+
+        int eventAction = event.getAction();
+
+        int paddingLeft = getPaddingLeft();
+        int paddingRight = getPaddingRight();
+        int contentWidth = getWidth() - paddingLeft - paddingRight;
+        int caseSize = contentWidth / 10;
+
+        int x = (int)event.getX();
+        int y = (int)event.getY();
+        int row = y / caseSize;
+        int col = x / caseSize;
+
+        if (eventAction == MotionEvent.ACTION_DOWN)
+            cells.get(10 * row + col).setCovered(false);
+
+        // tell the View to redraw the Canvas
+        invalidate();
+
+        // tell the View that we handled the event
+        return true;
+
     }
 }
