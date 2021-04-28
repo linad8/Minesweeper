@@ -11,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -23,7 +24,7 @@ public class CustomView<Mode> extends View {
     private Paint red;
     private Paint yellow;
 
-    int nbMines;
+    TextView marked;
     int nbMarked;
 
     boolean lost;
@@ -53,6 +54,7 @@ public class CustomView<Mode> extends View {
 
         lost = false;
         uncoveredMode = true;
+        nbMarked = 0;
 
         // setting background
         setBackgroundColor(Color.WHITE);
@@ -75,12 +77,10 @@ public class CustomView<Mode> extends View {
                 count++;
             }
         }
-        Log.d("debug", "init init");
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        Log.d("ONDRAW", "uncovered mode " + uncoveredMode);
         super.onDraw(canvas);
 
         // getting the dimensions
@@ -103,44 +103,14 @@ public class CustomView<Mode> extends View {
         square = new Rect(10, 10, sideLength, sideLength);
 
         // drawing the squares for uncovered mode
-        if (uncoveredMode)
-        {
             for (int i = 0; i < 10; i++) {
                 for (int j = 0; j < 10; j++) {
                     canvas.save();
                     canvas.translate(j * squareSize, i * squareSize);
-                    // case of a covered cell
-                    if (cells.get(i * 10 + j).isCovered())
-                        canvas.drawRect(square, black);
-                    else {
-                        // case of a mined cell
-                        if (cells.get(i * 10 + j).isMined()) {
-                            canvas.drawRect(square, red);
-                            black.setTextSize(80);
-                            canvas.drawText("M", 20, 80, black);
-                        } else
-                            // case of an empty cell
-                            canvas.drawRect(square, gray);
-                    }
-                    canvas.restore();
-                }
-            }
-        }
-        else
-            {
 
-            for (int i = 0; i < 10; i++) {
-                for (int j = 0; j < 10; j++) {
-                    canvas.save();
-                    canvas.translate(j * squareSize, i * squareSize);
-                    // case of a covered cell
                     if (cells.get(i * 10 + j).isMarked())
-                    {
                         canvas.drawRect(square, yellow);
-                        nbMarked++;
-                    }
-                    else
-                    {
+                    else {
                         // case of a covered cell
                         if (cells.get(i * 10 + j).isCovered())
                             canvas.drawRect(square, black);
@@ -148,8 +118,8 @@ public class CustomView<Mode> extends View {
                             // case of a mined cell
                             if (cells.get(i * 10 + j).isMined()) {
                                 canvas.drawRect(square, red);
-                                black.setTextSize(80);
-                                canvas.drawText("M", 20, 80, black);
+                                black.setTextSize(squareSize * 0.8f);
+                                canvas.drawText("M", squareSize * 0.2f, squareSize * 0.8f, black);
                             } else
                                 // case of an empty cell
                                 canvas.drawRect(square, gray);
@@ -158,8 +128,6 @@ public class CustomView<Mode> extends View {
                     canvas.restore();
                 }
             }
-        }
-
     }
 
     public boolean onTouchEvent(MotionEvent event) {
@@ -182,13 +150,23 @@ public class CustomView<Mode> extends View {
         {
             if (uncoveredMode)
             {
-                cells.get(10 * row + col).setCovered(false);
-                if (cells.get(10 * row + col).isMined())
-                    lost = true;
+                if (!cells.get(10 * row + col).isMarked())
+                {
+                    cells.get(10 * row + col).setCovered(false);
+                    if (cells.get(10 * row + col).isMined())
+                        lost = true;
+                }
             }
             else
             {
-                cells.get(10 * row + col).setMarked();
+                if (cells.get(10 * row + col).isCovered()) {
+                    if (cells.get(10 * row + col).isMarked())
+                        nbMarked--;
+                    else
+                        nbMarked++;
+                    cells.get(10 * row + col).setMarked();
+                    marked.setText(String.valueOf(nbMarked));
+                }
             }
 
         }
@@ -203,9 +181,10 @@ public class CustomView<Mode> extends View {
 
     public void switchMode() {
         uncoveredMode = !uncoveredMode;
-        //invalidate();
     }
 
     public boolean isUncoveredMode() {return uncoveredMode;}
+
+    public int getNbMarked() {return nbMarked;}
 
 }

@@ -9,18 +9,40 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:gravity="center">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Number of mines"
-            android:id="@+id/nbMines"/>
+            android:text="Total number of mines:"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="15dp"
+            />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Number of marked cells"
-            android:id="@+id/nbMarked"/>
+            android:text="20"
+            android:textSize="30dp"
+            android:textColor="@color/green"
+            android:textStyle="bold"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Number of marked mines:"
+            android:textColor="@color/black"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:id="@+id/nbMarked"
+            android:textSize="30dp"
+            android:textColor="@color/green"
+            android:textStyle="bold"/>
+
     </LinearLayout>
 
     <LinearLayout
@@ -32,15 +54,19 @@
             android:id="@+id/resetButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Reset"
-            android:onClick="resetGame">
+            android:text="Reset Game"
+            android:onClick="resetGame"
+            android:layout_marginRight="20dp">
         </Button>
         <Button
             android:id="@+id/modeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Marked Mode"
-            android:onClick="switchMode">
+            android:textColor="@color/black"
+            android:onClick="switchMode"
+            android:layout_marginLeft="20dp"
+            android:backgroundTint="@color/yellow">
         </Button>
     </LinearLayout>
 
