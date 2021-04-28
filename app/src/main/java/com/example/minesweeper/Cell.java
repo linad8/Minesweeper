@@ -3,10 +3,12 @@ package com.example.minesweeper;
 public class Cell {
     private boolean covered;
     private boolean mined;
+    private boolean marked;
 
     public Cell() {
         covered = true;
         mined = false;
+        marked = false;
     }
 
     public boolean isCovered() {
@@ -23,5 +25,13 @@ public class Cell {
 
     public void setMined(boolean mined) {
         this.mined = mined;
+    }
+
+    public boolean isMarked() {
+        return marked;
+    }
+
+    public void setMarked() {
+        this.marked = !marked;
     }
 }

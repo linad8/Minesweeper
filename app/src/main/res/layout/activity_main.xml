@@ -14,11 +14,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Text1" />
+            android:text="Number of mines"
+            android:id="@+id/nbMines"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Text2" />
+            android:text="Number of marked cells"
+            android:id="@+id/nbMarked"/>
     </LinearLayout>
 
     <LinearLayout
@@ -27,20 +29,25 @@
         android:orientation="horizontal"
         android:gravity="center">
         <Button
+            android:id="@+id/resetButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Reset">
+            android:text="Reset"
+            android:onClick="resetGame">
         </Button>
         <Button
+            android:id="@+id/modeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mode">
+            android:text="Marked Mode"
+            android:onClick="switchMode">
         </Button>
     </LinearLayout>
 
     <com.example.minesweeper.CustomView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/minesweeper">
     </com.example.minesweeper.CustomView>
 
 </LinearLayout>
